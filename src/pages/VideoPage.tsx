@@ -14,11 +14,9 @@ export default function VideoPage() {
     }
 
     return (
-        <div className="w-full grid px-4 py-2 lg:px-6 lg:py-4 grid-cols-1 lg:grid-cols-[1fr_350px] xl:grid-cols-[1fr_400px] gap-6">
+        <div className="w-full grid px-4 py-2 lg:px-6 lg:py-4 grid-cols-1 lg:grid-cols-[8fr_2fr] gap-6">
 
-            {/* ОСНОВНИЙ КОНТЕНТ (ПЛЕЄР ТА ІНФО) — займає fill space */}
             <div className="w-full flex flex-col">
-                {/* aspect-video автоматично адаптує висоту до fill-ширини */}
                 <div className="w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
                     <iframe
                         width="100%"
@@ -32,7 +30,7 @@ export default function VideoPage() {
                     ></iframe>
                 </div>
 
-                <h1 className="text-xl md:text-4xl font-bold text-white mt-4 line-clamp-2">
+                <h1 className="text-3xl font-bold text-white mt-4 line-clamp-2">
                     {video.title}
                 </h1>
 
@@ -58,19 +56,16 @@ export default function VideoPage() {
                     </div>
                 </div>
 
-                {/* Опис відео */}
                 <div className="mt-4 p-4 bg-gray-800 rounded-xl hover:bg-gray-700 cursor-pointer transition-colors">
-                    <div className="text-white text-bg font-bold">
+                    <div className="text-white text-base font-bold">
                         {video.views.toLocaleString('uk-UA')} переглядів • {video.postedAt}
                     </div>
-                    <p className="text-white text-bg mt-1 whitespace-pre-wrap">
+                    <p className="text-white text-base mt-1 whitespace-pre-wrap">
                         Це тестовий опис до відео. Тут зазвичай знаходиться інформація про випуск, посилання на соцмережі та таймкоди...
                     </p>
                 </div>
             </div>
 
-            {/* ПРАВА ЧАСТИНА: САЙДБАР (притиснутий справа зверху) */}
-            {/* ОНОВЛЕНО: Додано sticky top-20 та lg:mt-1 */}
             <div className="flex flex-col gap-4 sticky top-20 lg:mt-1 lg:w-full">
                 <h3 className="text-white font-semibold text-2xl mb-1">Схожі відео</h3>
 

@@ -4,8 +4,6 @@ import Footer from './Footer'; // Якщо перейменуєш файли, з
 
 export default function Layout() {
     return (
-        // min-h-screen гарантує, що контейнер займе мінімум 100% висоти вікна браузера
-        // flex-col вибудовує елементи (header, main, footer) вертикально
         <div className="min-h-screen flex flex-col bg-gray-950">
 
             <Header />
