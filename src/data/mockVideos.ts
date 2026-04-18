@@ -1,4 +1,3 @@
-// Описуємо тип нашого об'єкта відео
 export interface Video {
     id: string;
     thumbnailUrl: string;
@@ -8,38 +7,37 @@ export interface Video {
     postedAt: string;
 }
 
-// Експортуємо масив даних
 export const MOCK_VIDEOS: Video[] = [
     {
-        id: "1",
-        thumbnailUrl: "https://picsum.photos/seed/1/640/360",
-        title: "React TypeScript Tutorial for Beginners",
-        channelName: "Tech Channel",
-        views: 150000,
-        postedAt: "2 дні тому"
+        id: "SqcY0GlETPk",
+        thumbnailUrl: "https://img.youtube.com/vi/SqcY0GlETPk/maxresdefault.jpg",
+        title: "React Tutorial for Beginners",
+        channelName: "Programming with Mosh",
+        views: 1500000,
+        postedAt: "2 роки тому"
     },
     {
-        id: "2",
-        thumbnailUrl: "https://picsum.photos/seed/2/640/360",
-        title: "Understanding Vite and Tailwind CSS Architecture",
-        channelName: "Frontend Master",
-        views: 42000,
-        postedAt: "5 годин тому"
+        id: "KCrXgy8qtjM",
+        thumbnailUrl: "https://img.youtube.com/vi/KCrXgy8qtjM/maxresdefault.jpg",
+        title: "Vite in 100 Seconds",
+        channelName: "Fireship",
+        views: 420000,
+        postedAt: "1 рік тому"
     },
     {
-        id: "3",
-        thumbnailUrl: "https://picsum.photos/seed/3/640/360",
-        title: "How to build a YouTube Clone",
-        channelName: "Code Academy",
+        id: "dGcsHMXbSOA",
+        thumbnailUrl: "https://img.youtube.com/vi/dGcsHMXbSOA/maxresdefault.jpg",
+        title: "Tailwind CSS Full Course",
+        channelName: "FreeCodeCamp",
         views: 890000,
-        postedAt: "1 місяць тому"
+        postedAt: "8 місяців тому"
     },
     {
-        id: "4",
-        thumbnailUrl: "https://picsum.photos/seed/4/640/360",
-        title: "Advanced React Router DOM setup",
-        channelName: "Web Dev Simplified",
-        views: 12000,
-        postedAt: "10 хвилин тому"
+        id: "oUPgaOcmHOU",
+        thumbnailUrl: "https://img.youtube.com/vi/oUPgaOcmHOU/maxresdefault.jpg",
+        title: "React Router DOM v6 Tutorial",
+        channelName: "Net Ninja",
+        views: 320000,
+        postedAt: "1 рік тому"
     }
 ];
