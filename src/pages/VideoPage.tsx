@@ -70,20 +70,27 @@ export default function VideoPage() {
                 <h3 className="text-white font-semibold text-2xl mb-1">Схожі відео</h3>
 
                 <div className="flex flex-col gap-3">
-                    {MOCK_VIDEOS.filter(v => v.id !== id).map((v) => (
-                        <div key={v.id} className="flex gap-2 group cursor-pointer">
-                            <div className="relative w-40 h-24 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden">
-                                <img src={v.thumbnailUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                    {MOCK_VIDEOS
+                        .filter(v => v.category === video.category && v.id !== id) // Фільтр за категорією
+                        .map((v) => (
+                            <div key={v.id} className="flex gap-2 group cursor-pointer">
+                                <div className="relative w-40 h-24 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden">
+                                    <img
+                                        src={v.thumbnailUrl}
+                                        alt=""
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <h4 className="text-white text-sm font-bold line-clamp-2 leading-tight group-hover:text-blue-400">
+                                        {v.title}
+                                    </h4>
+                                    <p className="text-gray-400 text-xs mt-1 hover:text-white">{v.channelName}</p>
+                                    <p className="text-gray-400 text-xs">{v.views.toLocaleString('uk-UA')} переглядів</p>
+                                </div>
                             </div>
-                            <div className="flex flex-col gap-1">
-                                <h4 className="text-white text-sm font-bold line-clamp-2 leading-tight group-hover:text-blue-400">
-                                    {v.title}
-                                </h4>
-                                <p className="text-gray-400 text-xs mt-1 hover:text-white">{v.channelName}</p>
-                                <p className="text-gray-400 text-xs">{v.views.toLocaleString('uk-UA')} переглядів</p>
-                            </div>
-                        </div>
-                    ))}
+                        ))
+                    }
                 </div>
             </div>
 

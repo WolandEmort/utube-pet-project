@@ -9,15 +9,9 @@ export default function HomePage() {
                 {MOCK_VIDEOS.map((video) => (
                     <VideoCard
                         key={video.id}
-                        id={video.id}
-                        thumbnailUrl={video.thumbnailUrl}
-                        title={video.title}
-                        channelName={video.channelName}
-                        views={video.views}
-                        postedAt={video.postedAt}
+                        {...video}
                     />
                 ))}
-
             </div>
         </div>
     );
