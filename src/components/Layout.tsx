@@ -1,18 +1,16 @@
 import { Outlet } from 'react-router-dom';
-import Header from './Header'; // Якщо перейменуєш файли, зміни на './Header'
-import Footer from './Footer'; // Якщо перейменуєш файли, зміни на './Footer'
+import Header from './Header';
+import Footer from './Footer';
 
 export default function Layout() {
     return (
-        <div className="min-h-screen flex flex-col bg-gray-950">
-
+        <div className="min-h-screen bg-black flex flex-col">
             <Header />
-            <main className="flex-1 flex flex-col text-white">
+            <main className="flex-1">
+
                 <Outlet />
             </main>
-
             <Footer />
-
         </div>
     );
 }

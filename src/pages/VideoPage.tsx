@@ -1,9 +1,27 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { MOCK_VIDEOS } from '../data/mockVideos';
+import { useAuth } from '../context/AuthContext';
 
 export default function VideoPage() {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+    const { user } = useAuth(); // Отримуємо стан користувача
+
     const video = MOCK_VIDEOS.find((v) => v.id === id);
+
+    // Логіка захисту маршруту
+    useEffect(() => {
+        if (!user) {
+            // Перенаправляємо на логін і передаємо повідомлення через state
+            navigate('/login', {
+                state: { toastMessage: 'Щоб переглянути відео, необхідно авторизуватися' }
+            });
+        }
+    }, [user, navigate]);
+
+    // Блокуємо рендер контенту, якщо користувач не авторизований
+    if (!user) return null;
 
     if (!video) {
         return (
@@ -73,7 +91,7 @@ export default function VideoPage() {
                     {MOCK_VIDEOS
                         .filter(v => v.category === video.category && v.id !== id) // Фільтр за категорією
                         .map((v) => (
-                            <div key={v.id} className="flex gap-2 group cursor-pointer">
+                            <Link to={`/watch/${v.id}`} key={v.id} className="flex gap-2 group cursor-pointer">
                                 <div className="relative w-40 h-24 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden">
                                     <img
                                         src={v.thumbnailUrl}
@@ -88,7 +106,7 @@ export default function VideoPage() {
                                     <p className="text-gray-400 text-xs mt-1 hover:text-white">{v.channelName}</p>
                                     <p className="text-gray-400 text-xs">{v.views.toLocaleString('uk-UA')} переглядів</p>
                                 </div>
-                            </div>
+                            </Link>
                         ))
                     }
                 </div>
