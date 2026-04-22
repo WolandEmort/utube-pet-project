@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 export default function VideoPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { user } = useAuth(); // Отримуємо стан користувача
+    const { user } = useAuth();
 
     const video = MOCK_VIDEOS.find((v) => v.id === id);
 
@@ -78,8 +78,9 @@ export default function VideoPage() {
                     <div className="text-white text-base font-bold">
                         {video.views.toLocaleString('uk-UA')} переглядів • {video.postedAt}
                     </div>
+                    {/* Вивід динамічного опису з бази даних */}
                     <p className="text-white text-base mt-1 whitespace-pre-wrap">
-                        Це тестовий опис до відео. Тут зазвичай знаходиться інформація про випуск, посилання на соцмережі та таймкоди...
+                        {video.description}
                     </p>
                 </div>
             </div>

@@ -6,147 +6,183 @@ export interface Video {
     views: number;
     postedAt: string;
     category: string;
+    description: string;
 }
 
 export const MOCK_VIDEOS: Video[] = [
-    // --- DEVELOPMENT ---
+    // --- FRONTEND & DEVELOPMENT ---
     {
-        id: "SqcY0GlETPk",
-        thumbnailUrl: "https://img.youtube.com/vi/SqcY0GlETPk/maxresdefault.jpg",
-        title: "React Tutorial for Beginners",
-        channelName: "Programming with Mosh",
+        id: "bMknfKXIFA8",
+        thumbnailUrl: "https://img.youtube.com/vi/bMknfKXIFA8/hqdefault.jpg",
+        title: "React Course - Beginner's Tutorial for React 18",
+        channelName: "freeCodeCamp.org",
+        views: 3200000,
+        postedAt: "2 роки тому",
+        category: "Development",
+        description: "Повний курс з React 18. Включає створення проєктів з нуля, роботу зі станом (useState), побічними ефектами (useEffect) та формами."
+    },
+    {
+        id: "zQnBQ4tB3ZA",
+        thumbnailUrl: "https://img.youtube.com/vi/zQnBQ4tB3ZA/hqdefault.jpg",
+        title: "TypeScript in 100 Seconds",
+        channelName: "Fireship",
+        views: 1100000,
+        postedAt: "3 роки тому",
+        category: "Development",
+        description: "Швидкий вступ до TypeScript. Пояснюється статична типізація, робота з інтерфейсами та компіляція в JavaScript."
+    },
+    {
+        id: "Tn6-PIqc4UM",
+        thumbnailUrl: "https://img.youtube.com/vi/Tn6-PIqc4UM/hqdefault.jpg",
+        title: "React in 100 Seconds",
+        channelName: "Fireship",
         views: 1500000,
         postedAt: "2 роки тому",
-        category: "Development"
+        category: "Development",
+        description: "Огляд React. Розглядаються базові концепції, хуки та алгоритм роботи Virtual DOM."
     },
-    {
-        id: "KCrXgy8qtjM",
-        thumbnailUrl: "https://img.youtube.com/vi/KCrXgy8qtjM/maxresdefault.jpg",
-        title: "Vite in 100 Seconds",
-        channelName: "Fireship",
-        views: 420000,
-        postedAt: "1 рік тому",
-        category: "Development"
-    },
+
     {
         id: "dGcsHMXbSOA",
-        thumbnailUrl: "https://img.youtube.com/vi/dGcsHMXbSOA/maxresdefault.jpg",
+        thumbnailUrl: "https://img.youtube.com/vi/dGcsHMXbSOA/hqdefault.jpg",
         title: "Tailwind CSS Full Course",
-        channelName: "FreeCodeCamp",
+        channelName: "freeCodeCamp.org",
         views: 890000,
         postedAt: "8 місяців тому",
-        category: "Development"
+        category: "Development",
+        description: "Посібник з використання utility-first фреймворку Tailwind CSS. Створення адаптивних лейаутів та оптимізація білда."
     },
     {
-        id: "wm5gMKuwSYk",
-        thumbnailUrl: "https://img.youtube.com/vi/wm5gMKuwSYk/maxresdefault.jpg",
-        title: "Next.js App Router Crash Course",
+        id: "k5E2AVpwsko",
+        thumbnailUrl: "https://img.youtube.com/vi/k5E2AVpwsko/hqdefault.jpg",
+        title: "Angular in 100 Seconds",
+        channelName: "Fireship",
+        views: 850000,
+        postedAt: "1 рік тому",
+        category: "Development",
+        description: "Пояснення компонентної архітектури Angular, dependency injection та використання TypeScript у фреймворку."
+    },
+    {
+        id: "yfoY53QXEnI",
+        thumbnailUrl: "https://img.youtube.com/vi/yfoY53QXEnI/hqdefault.jpg",
+        title: "CSS Crash Course For Absolute Beginners",
         channelName: "Traversy Media",
-        views: 550000,
-        postedAt: "5 місяців тому",
-        category: "Development"
-    },
-    {
-        id: "d56mG7DezGs",
-        thumbnailUrl: "https://img.youtube.com/vi/d56mG7DezGs/maxresdefault.jpg",
-        title: "TypeScript Course for Beginners",
-        channelName: "Codevolution",
-        views: 310000,
-        postedAt: "1 рік тому",
-        category: "Development"
-    },
-
-    // --- GAMING ---
-    {
-        id: "_xMZFqYYRfQ",
-        thumbnailUrl: "https://img.youtube.com/vi/_xMZFqYYRfQ/maxresdefault.jpg",
-        title: "Лучший симулятор выживания - Обзор Project Zomboid",
-        channelName: "Survival Gaming",
-        views: 840000,
-        postedAt: "1 рік тому",
-        category: "Gaming"
-    },
-    {
-        id: "K_WDz4Eevno",
-        thumbnailUrl: "https://img.youtube.com/vi/K_WDz4Eevno/maxresdefault.jpg",
-        title: "Project Zomboid - Огляд Гри",
-        channelName: "UA Gaming",
-        views: 120000,
-        postedAt: "3 роки тому",
-        category: "Gaming"
-    },
-    {
-        id: "j8T4r-Y3e3E",
-        thumbnailUrl: "https://img.youtube.com/vi/j8T4r-Y3e3E/maxresdefault.jpg",
-        title: "Valheim - Ashlands Gameplay Trailer",
-        channelName: "Iron Gate",
-        views: 2100000,
-        postedAt: "1 рік тому",
-        category: "Gaming"
-    },
-    {
-        id: "Fz-2sL6aYy8",
-        thumbnailUrl: "https://img.youtube.com/vi/Fz-2sL6aYy8/maxresdefault.jpg",
-        title: "Terraria 1.4.4 Labor of Love Trailer",
-        channelName: "Re-Logic",
         views: 3400000,
-        postedAt: "2 роки тому",
-        category: "Gaming"
+        postedAt: "6 років тому",
+        category: "Development",
+        description: "Основи CSS: селектори, блокова модель, позиціонування та базові стилі для веб-сторінок."
     },
     {
-        id: "0aH09E71I4s",
-        thumbnailUrl: "https://img.youtube.com/vi/0aH09E71I4s/maxresdefault.jpg",
-        title: "Minecraft - 1.21 Update Showcase",
-        channelName: "Minecraft",
-        views: 5600000,
-        postedAt: "4 місяці тому",
-        category: "Gaming"
+        id: "UB1O30fR-EE",
+        thumbnailUrl: "https://img.youtube.com/vi/UB1O30fR-EE/hqdefault.jpg",
+        title: "HTML Crash Course For Absolute Beginners",
+        channelName: "Traversy Media",
+        views: 4500000,
+        postedAt: "6 років тому",
+        category: "Development",
+        description: "Основи HTML: структура документа, теги, семантична розмітка та форми."
+    },
+    {
+        id: "RGOj5yH7evk",
+        thumbnailUrl: "https://img.youtube.com/vi/RGOj5yH7evk/hqdefault.jpg",
+        title: "Git and GitHub for Beginners",
+        channelName: "freeCodeCamp.org",
+        views: 2100000,
+        postedAt: "3 роки тому",
+        category: "Development",
+        description: "Системи контролю версій. Робота з репозиторіями, коміти, гілки та злиття (merge) у Git."
     },
 
-    // --- MUSIC ---
     {
-        id: "sEKOczkt0tU",
-        thumbnailUrl: "https://img.youtube.com/vi/sEKOczkt0tU/maxresdefault.jpg",
-        title: "Crystal Castles - Crimewave (Official Video)",
-        channelName: "Crystal Castles",
-        views: 416000,
-        postedAt: "14 років тому",
-        category: "Music"
+        id: "mr15Xzb1Ook",
+        thumbnailUrl: "https://img.youtube.com/vi/mr15Xzb1Ook/hqdefault.jpg",
+        title: "Tailwind CSS in 100 Seconds",
+        channelName: "Fireship",
+        views: 1300000,
+        postedAt: "2 роки тому",
+        category: "Development",
+        description: "Як працює utility-first CSS. Швидке створення адаптивних інтерфейсів."
     },
     {
-        id: "PBPO--012zw",
-        thumbnailUrl: "https://img.youtube.com/vi/PBPO--012zw/maxresdefault.jpg",
-        title: "WITCH HOUSE MIX | Dark Ambient / Hardwave",
-        channelName: "Aim To Head Mix",
-        views: 89000,
-        postedAt: "1 місяць тому",
-        category: "Music"
+        id: "rfscVS0vtbw",
+        thumbnailUrl: "https://img.youtube.com/vi/rfscVS0vtbw/hqdefault.jpg",
+        title: "Learn Python - Full Course for Beginners",
+        channelName: "freeCodeCamp.org",
+        views: 41000000,
+        postedAt: "5 років тому",
+        category: "Development",
+        description: "Базовий синтаксис Python, структури даних та алгоритми для бекенд-розробки."
     },
+
+    // --- PUBLIC DOMAIN & MUSIC ---
     {
-        id: "1G_qA7pU194",
-        thumbnailUrl: "https://img.youtube.com/vi/1G_qA7pU194/hqdefault.jpg",
-        title: "Pastel Ghost - Dark Beach",
-        channelName: "Pastel Ghost",
+        id: "aqz-KE-bpKQ",
+        thumbnailUrl: "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+        title: "Big Buck Bunny 4K (Official Blender Foundation)",
+        channelName: "Blender",
         views: 12000000,
-        postedAt: "8 років тому",
-        category: "Music"
+        postedAt: "15 років тому",
+        category: "Entertainment",
+        description: "Відкритий короткометражний анімаційний фільм від Blender Foundation. Використовується для тестування відеоплеєрів."
     },
     {
-        id: "x2Jg7Mh115w",
-        thumbnailUrl: "https://img.youtube.com/vi/x2Jg7Mh115w/maxresdefault.jpg",
-        title: "The Agnes Circle - Monument",
-        channelName: "Post-Punk Daily",
-        views: 45000,
-        postedAt: "3 роки тому",
-        category: "Music"
-    },
-    {
-        id: "k-fS-U4XQxE",
-        thumbnailUrl: "https://img.youtube.com/vi/k-fS-U4XQxE/maxresdefault.jpg",
-        title: "Glitchcore / Hyperpop Mix",
-        channelName: "Underground Sounds",
-        views: 230000,
+        id: "jfKfPfyJRdk",
+        thumbnailUrl: "https://img.youtube.com/vi/jfKfPfyJRdk/hqdefault.jpg",
+        title: "lofi hip hop radio - beats to relax/study to",
+        channelName: "Lofi Girl",
+        views: 75000000,
         postedAt: "1 рік тому",
-        category: "Music"
+        category: "Music",
+        description: "Музична трансляція з лоу-фай хіп-хопом. Відмінно підходить для фону під час написання коду."
+    },
+    {
+        id: "dQw4w9WgXcQ",
+        thumbnailUrl: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+        title: "Rick Astley - Never Gonna Give You Up",
+        channelName: "Rick Astley",
+        views: 1400000000,
+        postedAt: "14 років тому",
+        category: "Music",
+        description: "Офіційний музичний кліп. Відкритий для вбудовування через iframe."
+    },
+    {
+        id: "jNQXAC9IVRw",
+        thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/hqdefault.jpg",
+        title: "Me at the zoo",
+        channelName: "jawed",
+        views: 310000000,
+        postedAt: "18 років тому",
+        category: "Entertainment",
+        description: "Перше відео, завантажене на YouTube. Історичний артефакт платформи."
+    },
+    {
+        id: "LXb3EKWsInQ",
+        thumbnailUrl: "https://img.youtube.com/vi/LXb3EKWsInQ/hqdefault.jpg",
+        title: "COSTA RICA IN 4K 60fps HDR (ULTRA HD)",
+        channelName: "Jacob + Katie Schwarz",
+        views: 145000000,
+        postedAt: "8 років тому",
+        category: "Cinematic",
+        description: "Популярне відео для перевірки якості 4K та HDR. Автори дозволяють вбудовування."
+    },
+    {
+        id: "M7lc1UVf-VE",
+        thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/hqdefault.jpg",
+        title: "YouTube Developers Live: Embedded Web Player",
+        channelName: "Google Developers",
+        views: 1500000,
+        postedAt: "10 років тому",
+        category: "Development",
+        description: "Офіційне тестове відео від команди YouTube. Створене для перевірки роботи iframe та API плеєра."
+    },
+    {
+        id: "HXV3zeQKqGY",
+        thumbnailUrl: "https://img.youtube.com/vi/HXV3zeQKqGY/hqdefault.jpg",
+        title: "SQL Tutorial - Full Database Course for Beginners",
+        channelName: "freeCodeCamp.org",
+        views: 9500000,
+        postedAt: "5 років тому",
+        category: "Development",
+        description: "Курс з реляційних баз даних та синтаксису SQL (CRUD операції, таблиці, ключі)."
     }
 ];

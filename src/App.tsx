@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import VideoPage from './pages/VideoPage';
 import LoginPage from './pages/LoginPage';
 import { AuthProvider } from './context/AuthContext';
+import SearchPage from './pages/SearchPage';
 
 export default function App() {
     return (
@@ -14,6 +15,7 @@ export default function App() {
                         <Route index element={<HomePage />} />
                         <Route path="watch/:id" element={<VideoPage />} />
                         <Route path="login" element={<LoginPage />} />
+                        <Route path="search" element={<SearchPage />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
