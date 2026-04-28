@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from 'react';
-// Явний імпорт типів
 import type { ReactNode } from 'react';
 import type { User } from '../data/mockUsers';
 

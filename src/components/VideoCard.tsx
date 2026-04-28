@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Video } from '../data/mockVideos';
+import { uiLabels } from '../constants/labels';
 
 interface VideoCardProps extends Video {
     layout?: 'vertical' | 'horizontal';
@@ -7,6 +8,7 @@ interface VideoCardProps extends Video {
 
 export default function VideoCard({ layout = 'vertical', ...video }: VideoCardProps) {
     const isHorizontal = layout === 'horizontal';
+    const { videoCard } = uiLabels;
 
     return (
         <Link
@@ -31,7 +33,7 @@ export default function VideoCard({ layout = 'vertical', ...video }: VideoCardPr
             {/* Секція контенту */}
             <div className={`flex ${isHorizontal ? 'flex-col flex-1 py-1' : 'flex-row gap-3'}`}>
 
-                {/* Аватар показуємо тільки у вертикальному лейауті (як на головній) */}
+                {/* Аватар показуємо тільки у вертикальному лейауті */}
                 {!isHorizontal && (
                     <div className="w-9 h-9 rounded-full bg-gray-700 flex-shrink-0 mt-1" />
                 )}
@@ -50,7 +52,8 @@ export default function VideoCard({ layout = 'vertical', ...video }: VideoCardPr
                             {video.channelName}
                         </p>
                         <p className="text-gray-400 text-sm">
-                            {video.views.toLocaleString('uk-UA')} переглядів • {video.postedAt}
+                            {/* Використовуємо функцію з конфігурації для форматування */}
+                            {videoCard.views(video.views)} • {video.postedAt}
                         </p>
                     </div>
 

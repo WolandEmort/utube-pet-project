@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { uiLabels } from '../constants/labels';
 
 export default function Header() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const { header } = uiLabels;
 
     // Стан для випадаючого меню
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,9 +36,11 @@ export default function Header() {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        if (searchQuery.trim()) {
-            // Маршрутизація на майбутню сторінку пошуку з передачею query-параметра
-            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        // Обрізаємо пробіли по краях
+        const trimmedQuery = searchQuery.trim();
+        if (trimmedQuery) {
+            // Маршрутизація на сторінку пошуку з передачею query-параметра
+            navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
         }
     };
 
@@ -46,12 +50,11 @@ export default function Header() {
             {/* 1. ЛІВИЙ БЛОК: Логотип */}
             <div className="flex-shrink-0 w-32 md:w-48">
                 <Link to="/" className="font-bold text-xl tracking-tight">
-                    YouTube Clone
+                    {header.logo}
                 </Link>
             </div>
 
             {/* 2. ЦЕНТРАЛЬНИЙ БЛОК: Пошук */}
-            {/* hidden md:flex приховує пошук на мобільних пристроях для економії місця */}
             <form
                 onSubmit={handleSearch}
                 className="hidden md:flex flex-1 max-w-[600px] items-center mx-4"
@@ -60,8 +63,10 @@ export default function Header() {
                     <input
                         type="text"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Введіть запит"
+                        // Обрізаємо рядок примусово на рівні стейту, щоб відповідати лімітам SearchPage
+                        onChange={(e) => setSearchQuery(e.target.value.slice(0, 100))}
+                        maxLength={100}
+                        placeholder={header.searchPlaceholder}
                         className="w-full bg-transparent text-white px-4 py-2 focus:outline-none text-sm"
                     />
                     <button
@@ -101,7 +106,7 @@ export default function Header() {
                                         onClick={() => setIsMenuOpen(false)}
                                         className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                                     >
-                                        Історія перегляду
+                                        {header.history}
                                     </Link>
                                 </div>
 
@@ -110,7 +115,7 @@ export default function Header() {
                                         onClick={handleLogout}
                                         className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                                     >
-                                        Вийти
+                                        {header.logoutBtn}
                                     </button>
                                 </div>
                             </div>
@@ -121,7 +126,7 @@ export default function Header() {
                         to="/login"
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-full transition-colors whitespace-nowrap"
                     >
-                        Увійти
+                        {header.loginBtn}
                     </Link>
                 )}
             </div>

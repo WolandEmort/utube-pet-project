@@ -2,23 +2,27 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { MOCK_VIDEOS } from '../data/mockVideos';
 import { useAuth } from '../context/AuthContext';
+import { uiLabels } from '../constants/labels';
 
 export default function VideoPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
 
+    // Деструктуризація потрібних секцій з конфігу
+    const { videoPage, auth, videoCard } = uiLabels;
+
     const video = MOCK_VIDEOS.find((v) => v.id === id);
 
     // Логіка захисту маршруту
     useEffect(() => {
         if (!user) {
-            // Перенаправляємо на логін і передаємо повідомлення через state
+            // Використовуємо повідомлення з конфігурації
             navigate('/login', {
-                state: { toastMessage: 'Щоб переглянути відео, необхідно авторизуватися' }
+                state: { toastMessage: auth.toastAuthRequired }
             });
         }
-    }, [user, navigate]);
+    }, [user, navigate, auth.toastAuthRequired]);
 
     // Блокуємо рендер контенту, якщо користувач не авторизований
     if (!user) return null;
@@ -26,7 +30,7 @@ export default function VideoPage() {
     if (!video) {
         return (
             <div className="flex items-center justify-center h-screen text-white text-4xl">
-                Відео не знайдено
+                {videoPage.videoNotFound}
             </div>
         );
     }
@@ -57,13 +61,15 @@ export default function VideoPage() {
                         <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 flex-shrink-0"></div>
                         <div>
                             <div className="text-white font-bold">{video.channelName}</div>
-                            <div className="text-gray-400 text-sm">1.2 млн підписників</div>
+                            {/* Передаємо рядок '1.2 млн' у функцію */}
+                            <div className="text-gray-400 text-sm">{videoPage.subscribers('1.2 млн')}</div>
                         </div>
                         <button className="ml-4 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-gray-200 transition-colors">
-                            Підписатися
+                            {videoPage.subscribeBtn}
                         </button>
                     </div>
 
+                    {/* Лайки поки залишаємо статичними, оскільки їх немає в MOCK_VIDEOS */}
                     <div className="flex items-center gap-2 bg-gray-800 p-1 rounded-full">
                         <button className="text-white px-4 py-1.5 border-r border-gray-700 hover:bg-gray-700 rounded-l-full text-sm font-medium">
                             👍 126 тис.
@@ -76,9 +82,9 @@ export default function VideoPage() {
 
                 <div className="mt-4 p-4 bg-gray-800 rounded-xl hover:bg-gray-700 cursor-pointer transition-colors">
                     <div className="text-white text-base font-bold">
-                        {video.views.toLocaleString('uk-UA')} переглядів • {video.postedAt}
+                        {/* Використовуємо функцію для форматування переглядів та дати */}
+                        {videoPage.viewsInfo(video.views, video.postedAt)}
                     </div>
-                    {/* Вивід динамічного опису з бази даних */}
                     <p className="text-white text-base mt-1 whitespace-pre-wrap">
                         {video.description}
                     </p>
@@ -86,11 +92,11 @@ export default function VideoPage() {
             </div>
 
             <div className="flex flex-col gap-4 sticky top-20 lg:mt-1 lg:w-full">
-                <h3 className="text-white font-semibold text-2xl mb-1">Схожі відео</h3>
+                <h3 className="text-white font-semibold text-2xl mb-1">{videoPage.similarVideos}</h3>
 
                 <div className="flex flex-col gap-3">
                     {MOCK_VIDEOS
-                        .filter(v => v.category === video.category && v.id !== id) // Фільтр за категорією
+                        .filter(v => v.category === video.category && v.id !== id)
                         .map((v) => (
                             <Link to={`/watch/${v.id}`} key={v.id} className="flex gap-2 group cursor-pointer">
                                 <div className="relative w-40 h-24 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden">
@@ -105,7 +111,10 @@ export default function VideoPage() {
                                         {v.title}
                                     </h4>
                                     <p className="text-gray-400 text-xs mt-1 hover:text-white">{v.channelName}</p>
-                                    <p className="text-gray-400 text-xs">{v.views.toLocaleString('uk-UA')} переглядів</p>
+                                    <p className="text-gray-400 text-xs">
+                                        {/* Перевикористовуємо функцію з videoCard */}
+                                        {videoCard.views(v.views)}
+                                    </p>
                                 </div>
                             </Link>
                         ))
