@@ -1,30 +1,76 @@
-import { useState } from 'react';
-import VideoCard from '../components/VideoCard';
-import { MOCK_VIDEOS } from '../data/mockVideos';
+import { useState, useEffect } from 'react';
+import VideoCard, { type Video } from '../components/VideoCard';
 import { uiLabels } from '../constants/labels';
 
-// Технічний ідентифікатор для логіки, який не залежить від мови інтерфейсу
 const ALL_CATEGORY_ID = 'all';
 
 export default function HomePage() {
     const { home } = uiLabels;
 
-    // 1. Стан зберігає 'all' або назву категорії з бекенду (string)
+    // 1. Додаємо стани для зберігання даних з сервера, статусу завантаження та помилок
+    const [videos, setVideos] = useState<Video[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
     const [activeCategory, setActiveCategory] = useState<string>(ALL_CATEGORY_ID);
 
-    // 2. В масив додаємо 'all' замість локалізованого тексту
-    const categories = [ALL_CATEGORY_ID, ...new Set(MOCK_VIDEOS.map((video) => video.category))];
+    // 2. Хук useEffect для виконання GET-запиту при монтуванні компонента
+    useEffect(() => {
+        const fetchVideos = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/');
 
-    // 3. Фільтрація працює з технічним ID
+                if (!response.ok) {
+                    throw new Error(`HTTP помилка: статускод ${response.status}`);
+                }
+
+                const data = await response.json();
+                setVideos(data);
+            } catch (err) {
+                // Перевіряємо тип помилки перед присвоєнням
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError('Невідома помилка при отриманні даних');
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchVideos();
+    }, []);
+
+    // 3. Динамічне формування категорій на основі даних з бекенду
+    const categories = [ALL_CATEGORY_ID, ...new Set(videos.map((video) => video.category))];
+
+    // 4. Фільтрація отриманого масиву
     const filteredVideos = activeCategory === ALL_CATEGORY_ID
-        ? MOCK_VIDEOS
-        : MOCK_VIDEOS.filter((video) => video.category === activeCategory);
+        ? videos
+        : videos.filter((video) => video.category === activeCategory);
+
+    // 5. Рендеринг стану завантаження
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-full text-gray-400">
+                Завантаження відео...
+            </div>
+        );
+    }
+
+    // 6. Рендеринг стану помилки мережі або сервера
+    if (error) {
+        return (
+            <div className="flex items-center justify-center h-full text-red-500">
+                Помилка підключення до API: {error}
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col h-full">
             <div className="sticky top-16 z-40 bg-gray-900 border-b border-gray-800 px-4 py-3 flex gap-3 overflow-x-auto no-scrollbar">
                 {categories.map((categoryId) => {
-                    // 4. Підміна технічного ID на локалізований текст безпосередньо перед рендером
                     const label = categoryId === ALL_CATEGORY_ID ? home.categoryAll : categoryId;
 
                     return (

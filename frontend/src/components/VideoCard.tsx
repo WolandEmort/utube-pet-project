@@ -1,6 +1,17 @@
 import { Link } from 'react-router-dom';
-import type { Video } from '../data/mockVideos';
 import { uiLabels } from '../constants/labels';
+
+// Інтерфейс відповідає схемі даних, яку віддає бекенд (PostgreSQL -> PHP JSON)
+export interface Video {
+    id: string;
+    title: string;
+    description: string;
+    channel_name: string; // Було channelName
+    views: number;
+    thumbnail_url: string; // Було thumbnailUrl
+    category: string;
+    posted_at: string; // Було postedAt, тепер це timestamp рядок
+}
 
 interface VideoCardProps extends Video {
     layout?: 'vertical' | 'horizontal';
@@ -9,6 +20,13 @@ interface VideoCardProps extends Video {
 export default function VideoCard({ layout = 'vertical', ...video }: VideoCardProps) {
     const isHorizontal = layout === 'horizontal';
     const { videoCard } = uiLabels;
+
+    // Конвертуємо SQL timestamp у локалізований формат дати
+    const formattedDate = new Date(video.posted_at).toLocaleDateString('uk-UA', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 
     return (
         <Link
@@ -24,7 +42,7 @@ export default function VideoCard({ layout = 'vertical', ...video }: VideoCardPr
                 }`}
             >
                 <img
-                    src={video.thumbnailUrl}
+                    src={video.thumbnail_url}
                     alt={video.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                 />
@@ -49,11 +67,11 @@ export default function VideoCard({ layout = 'vertical', ...video }: VideoCardPr
 
                     <div className={`${isHorizontal ? 'mt-1' : 'mt-0'}`}>
                         <p className="text-gray-400 text-sm hover:text-white transition-colors">
-                            {video.channelName}
+                            {video.channel_name}
                         </p>
                         <p className="text-gray-400 text-sm">
-                            {/* Використовуємо функцію з конфігурації для форматування */}
-                            {videoCard.views(video.views)} • {video.postedAt}
+                            {/* Використовуємо форматовану дату замість сирого timestamp */}
+                            {videoCard.views(video.views)} • {formattedDate}
                         </p>
                     </div>
 

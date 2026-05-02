@@ -1,0 +1,12 @@
+### Створення нового відео
+POST http://localhost:8080/
+Content-Type: application/json
+
+{
+  "id": "dQw4w9WgXcQ",
+  "title": "Rick Astley - Never Gonna Give You Up",
+  "description": "The official video for Never Gonna Give You Up by Rick Astley",
+  "channel_name": "Rick Astley",
+  "thumbnail_url": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+  "category": "Music"
+}
