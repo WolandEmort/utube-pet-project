@@ -6,11 +6,12 @@ export interface Video {
     id: string;
     title: string;
     description: string;
-    channel_name: string; // Було channelName
+    channel_name: string;
     views: number;
-    thumbnail_url: string; // Було thumbnailUrl
+    thumbnail_url: string;
     category: string;
-    posted_at: string; // Було postedAt, тепер це timestamp рядок
+    posted_at: string;
+    viewed_at?: string; // Додано опціональне поле для сторінки історії
 }
 
 interface VideoCardProps extends Video {
@@ -21,12 +22,23 @@ export default function VideoCard({ layout = 'vertical', ...video }: VideoCardPr
     const isHorizontal = layout === 'horizontal';
     const { videoCard } = uiLabels;
 
-    // Конвертуємо SQL timestamp у локалізований формат дати
-    const formattedDate = new Date(video.posted_at).toLocaleDateString('uk-UA', {
+    // Конвертуємо SQL timestamp публікації у локалізований формат дати
+    const formattedPostedDate = new Date(video.posted_at).toLocaleDateString('uk-UA', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
+
+    // Конвертуємо SQL timestamp перегляду (якщо він є) у формат дати та часу
+    const formattedViewedDate = video.viewed_at
+        ? new Date(video.viewed_at).toLocaleString('uk-UA', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+        : null;
 
     return (
         <Link
@@ -70,9 +82,15 @@ export default function VideoCard({ layout = 'vertical', ...video }: VideoCardPr
                             {video.channel_name}
                         </p>
                         <p className="text-gray-400 text-sm">
-                            {/* Використовуємо форматовану дату замість сирого timestamp */}
-                            {videoCard.views(video.views)} • {formattedDate}
+                            {videoCard.views(video.views)} • {formattedPostedDate}
                         </p>
+
+                        {/* Динамічний вивід дати перегляду виключно для сторінки історії */}
+                        {formattedViewedDate && (
+                            <p className="text-gray-500 text-xs mt-1 font-medium">
+                                Переглянуто: {formattedViewedDate}
+                            </p>
+                        )}
                     </div>
 
                     {/* Вивід динамічного опису для горизонтального лейауту */}

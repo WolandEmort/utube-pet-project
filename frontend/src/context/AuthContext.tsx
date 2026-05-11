@@ -1,11 +1,12 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 
-// 1. Інтерфейс відповідає структурі даних з БД (id, name, email)
+// Додано поле role для підтримки прав доступу в системі
 export interface User {
     id: string;
     name: string;
     email: string;
+    role: string;
 }
 
 interface AuthContextType {
@@ -20,7 +21,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const API_URL = 'http://localhost:8080';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    // Синхронна ініціалізація стану
     const [user, setUser] = useState<User | null>(() => {
         const savedUser = localStorage.getItem('currentUser');
         return savedUser ? JSON.parse(savedUser) : null;
@@ -35,12 +35,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const data = await response.json();
 
-        // Якщо сервер повертає статус 400, 401 тощо, response.ok буде false
         if (!response.ok) {
             throw new Error(data.error || 'Помилка авторизації');
         }
 
-        // Зберігаємо дані після успішної відповіді 200 OK
+        // Тепер об'єкт data.user містить поле role, отримане з БД через UserController
         localStorage.setItem('currentUser', JSON.stringify(data.user));
         setUser(data.user);
     };
@@ -54,12 +53,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const data = await response.json();
 
-        // Якщо сервер повертає статус 409 (дубль email) або 400, генеруємо помилку
         if (!response.ok) {
             throw new Error(data.error || 'Помилка реєстрації');
         }
 
-        // Після успішного створення одразу виконуємо логін
         await login(email, password);
     };
 
@@ -75,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 }
 
+// Hook
 // eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
     const context = useContext(AuthContext);

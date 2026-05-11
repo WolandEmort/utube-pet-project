@@ -14,10 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once 'db.php';
 require_once 'VideoController.php';
 require_once 'UserController.php';
+require_once 'HistoryController.php'; // 1. Підключення контролера історії
 
 /** @var PDO $pdo */
 $videoController = new VideoController($pdo);
 $userController = new UserController($pdo);
+$historyController = new HistoryController($pdo); // 2. Ініціалізація
 
 $method = $_SERVER['REQUEST_METHOD'];
 // Отримуємо чистий шлях без GET-параметрів (наприклад, '/register' з '/register?foo=bar')
@@ -54,6 +56,33 @@ if ($method === 'GET' && $uri === '/') {
     } else {
         http_response_code(400);
         echo json_encode(["error" => "Failed to create video"]);
+    }
+
+} elseif ($method === 'POST' && $uri === '/history') {
+    // 3. Запис факту перегляду відео
+    $data = json_decode(file_get_contents('php://input'), true);
+    $result = $historyController->recordView($data);
+
+    http_response_code($result['status']);
+    echo json_encode($result['body']);
+
+} elseif ($method === 'GET' && $uri === '/history') {
+    // 4. Отримання історії користувача
+    $userId = $_GET['user_id'] ?? null;
+
+    if (!$userId) {
+        http_response_code(400);
+        echo json_encode(["error" => "Відсутній параметр user_id"]);
+    } else {
+        $history = $historyController->getUserHistory($userId);
+
+        if (isset($history['error'])) {
+            http_response_code(500);
+            echo json_encode(["error" => $history['error']]);
+        } else {
+            http_response_code(200);
+            echo json_encode($history);
+        }
     }
 
 } else {

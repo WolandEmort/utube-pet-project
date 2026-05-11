@@ -30,6 +30,17 @@ export const uiLabels = {
         toastAuthRequired: "Щоб переглянути відео, необхідно авторизуватися"
     },
 
+    register: {
+        title: 'Реєстрація',
+        nameLabel: 'Ім\'я',
+        namePlaceholder: 'Іван Іванов',
+        submitBtn: 'Зареєструватися',
+        loadingBtn: 'Створення акаунта...',
+        haveAccountText: 'Вже маєте акаунт?',
+        loginLink: 'Увійти',
+        errorUnknown: 'Сталася невідома помилка під час реєстрації',
+    },
+
     search: {
         resultsFor: "Результати за запитом:",
         queryTrimmed: (limit: number) => `(запит обрізано до ${limit} символів)`,

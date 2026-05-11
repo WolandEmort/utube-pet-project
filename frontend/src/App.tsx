@@ -5,6 +5,9 @@ import VideoPage from './pages/VideoPage';
 import LoginPage from './pages/LoginPage';
 import { AuthProvider } from './context/AuthContext';
 import SearchPage from './pages/SearchPage';
+import RegisterPage from "./pages/RegisterPage.tsx";
+import HistoryPage from './pages/HistoryPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
     return (
@@ -15,7 +18,11 @@ export default function App() {
                         <Route index element={<HomePage />} />
                         <Route path="watch/:id" element={<VideoPage />} />
                         <Route path="login" element={<LoginPage />} />
+                        <Route path="register" element={<RegisterPage />} />
                         <Route path="search" element={<SearchPage />} />
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="history" element={<HistoryPage />} />
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>
