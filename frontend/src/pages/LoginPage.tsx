@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { MOCK_USERS } from '../data/mockUsers';
 import { useAuth } from '../context/AuthContext';
 import { uiLabels } from '../constants/labels';
 
-// Визначаємо ліміти згідно із загальними стандартами
 const MAX_EMAIL_LENGTH = 100;
 const MAX_PASSWORD_LENGTH = 128;
 
@@ -13,12 +11,14 @@ export default function LoginPage() {
     const location = useLocation();
     const { login } = useAuth();
 
-    // Імпортуємо конфігурацію текстів для сторінки авторизації
     const { auth } = uiLabels;
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    // Стан для блокування форми під час відправки запиту
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [toastMessage, setToastMessage] = useState<string>(() => {
         return location.state?.toastMessage || '';
@@ -36,23 +36,28 @@ export default function LoginPage() {
         }
     }, [toastMessage]);
 
-    const handleLogin = (e: React.FormEvent) => {
+    // Функція тепер асинхронна
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setIsSubmitting(true);
 
-        const foundUser = MOCK_USERS.find(u => u.email === email && u.password === password);
+        try {
+            // Викликаємо метод з AuthContext, який робить fetch до PHP-бекенду
+            await login(email, password);
 
-        if (foundUser) {
-            login({
-                id: foundUser.id,
-                email: foundUser.email,
-                name: foundUser.name,
-                role: foundUser.role
-            });
+            // Якщо Promise вирішився успішно (помилок не було), переходимо на головну сторінку
             navigate('/');
-        } else {
-            // Використовуємо текст помилки з конфігурації
-            setError(auth.errorInvalidData);
+        } catch (err) {
+            // Перехоплюємо помилку, яку згенерував throw new Error() у AuthContext
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError(auth.errorInvalidData);
+            }
+        } finally {
+            // Знімаємо блокування кнопки незалежно від результату (успіх чи помилка)
+            setIsSubmitting(false);
         }
     };
 
@@ -87,7 +92,8 @@ export default function LoginPage() {
                             onChange={(e) => setEmail(e.target.value.slice(0, MAX_EMAIL_LENGTH))}
                             required
                             maxLength={MAX_EMAIL_LENGTH}
-                            className="bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                            disabled={isSubmitting}
+                            className="bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
                             placeholder={auth.emailPlaceholder}
                         />
                     </div>
@@ -102,16 +108,18 @@ export default function LoginPage() {
                             onChange={(e) => setPassword(e.target.value.slice(0, MAX_PASSWORD_LENGTH))}
                             required
                             maxLength={MAX_PASSWORD_LENGTH}
-                            className="bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                            disabled={isSubmitting}
+                            className="bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
                             placeholder={auth.passwordPlaceholder}
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg mt-2 transition-colors"
+                        disabled={isSubmitting}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg mt-2 transition-colors disabled:opacity-50 flex justify-center items-center"
                     >
-                        {auth.submitBtn}
+                        {isSubmitting ? 'Завантаження...' : auth.submitBtn}
                     </button>
                 </form>
 
