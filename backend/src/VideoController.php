@@ -42,4 +42,14 @@ class VideoController {
             ':category' => $data['category']
         ]);
     }
+    public function deleteVideo(string $id): bool {
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM videos WHERE id = :id");
+            return $stmt->execute(['id' => $id]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
 }

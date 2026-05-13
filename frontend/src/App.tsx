@@ -8,6 +8,7 @@ import SearchPage from './pages/SearchPage';
 import RegisterPage from "./pages/RegisterPage.tsx";
 import HistoryPage from './pages/HistoryPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminPage from "./pages/AdminPage.tsx";
 
 export default function App() {
     return (
@@ -22,6 +23,9 @@ export default function App() {
                         <Route path="search" element={<SearchPage />} />
                         <Route element={<ProtectedRoute />}>
                             <Route path="history" element={<HistoryPage />} />
+                        </Route>
+                        <Route element={<ProtectedRoute requiredRole="admin" />}>
+                            <Route path="admin" element={<AdminPage />} />
                         </Route>
                     </Route>
                 </Routes>

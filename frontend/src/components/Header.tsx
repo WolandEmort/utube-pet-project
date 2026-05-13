@@ -8,14 +8,11 @@ export default function Header() {
     const navigate = useNavigate();
     const { header } = uiLabels;
 
-    // Стан для випадаючого меню
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
-    // Стан для форми пошуку
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Закриття меню при кліку поза його межами
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -36,10 +33,8 @@ export default function Header() {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        // Обрізаємо пробіли по краях
         const trimmedQuery = searchQuery.trim();
         if (trimmedQuery) {
-            // Маршрутизація на сторінку пошуку з передачею query-параметра
             navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
         }
     };
@@ -63,7 +58,6 @@ export default function Header() {
                     <input
                         type="text"
                         value={searchQuery}
-                        // Обрізаємо рядок примусово на рівні стейту, щоб відповідати лімітам SearchPage
                         onChange={(e) => setSearchQuery(e.target.value.slice(0, 100))}
                         maxLength={100}
                         placeholder={header.searchPlaceholder}
@@ -73,7 +67,6 @@ export default function Header() {
                         type="submit"
                         className="bg-gray-800 px-5 py-2 border-l border-gray-700 hover:bg-gray-700 transition-colors flex items-center justify-center"
                     >
-                        {/* SVG іконка лупи */}
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gray-400">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>
@@ -101,6 +94,17 @@ export default function Header() {
                                 </div>
 
                                 <div className="py-1">
+                                    {/* Рендеримо кнопку адмін-панелі тільки для адміністраторів */}
+                                    {user.role === 'admin' && (
+                                        <Link
+                                            to="/admin"
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                        >
+                                            {header.adminPanel}
+                                        </Link>
+                                    )}
+
                                     <Link
                                         to="/history"
                                         onClick={() => setIsMenuOpen(false)}

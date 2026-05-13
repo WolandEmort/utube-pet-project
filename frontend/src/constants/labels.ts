@@ -4,7 +4,8 @@ export const uiLabels = {
         searchPlaceholder: "Введіть запит",
         history: "Історія перегляду",
         loginBtn: "Увійти",
-        logoutBtn: "Вийти"
+        logoutBtn: "Вийти",
+        adminPanel: 'Адмін-панель',
     },
     footer: {
         copyright: "© 2026 YouTube Pet Project",
@@ -52,6 +53,35 @@ export const uiLabels = {
         subscribers: (count: string) => `${count} підписників`,
         viewsInfo: (count: number, date: string) => `${count.toLocaleString('uk-UA')} переглядів • ${date}`,
         similarVideos: "Схожі відео",
-        videoNotFound: "Відео не знайдено"
+        videoNotFound: "Відео не знайдено",
+        loading: 'Завантаження відео...',
+        errorPrefix: 'Помилка:',
+        errorUnknown: 'Невідома помилка при отриманні даних',
+        likeBtn: 'Лайк',
+        dislikeBtn: 'Дизлайк',
+        mockLikesCount: '126 тис.',
+        mockSubscribersCount: '1.2 млн',
     },
+
+    history: {
+        title: 'Історія переглядів',
+        emptyText: 'Ви ще не переглянули жодного відео.',
+        loading: 'Завантаження історії...',
+        errorLoad: 'Помилка завантаження історії',
+        errorUnknown: 'Невідома помилка',
+        viewedAt: 'Переглянуто:',
+    },
+
+    admin: {
+        title: 'Панель керування контентом',
+        tableTitle: 'Назва відео',
+        tableCategory: 'Категорія',
+        tableDate: 'Дата завантаження',
+        tableActions: 'Дії',
+        deleteBtn: 'Видалити',
+        confirmDelete: 'Ви впевнені, що хочете видалити це відео?',
+        emptyText: 'Відео поки що немає',
+        errorDelete: 'Помилка при видаленні',
+    }
+
 } as const;
