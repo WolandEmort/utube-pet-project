@@ -9,6 +9,8 @@ import RegisterPage from "./pages/RegisterPage.tsx";
 import HistoryPage from './pages/HistoryPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminPage from "./pages/AdminPage.tsx";
+import AdminCreateVideoPage from './pages/AdminCreateVideoPage';
+import AdminEditVideoPage from './pages/AdminEditVideoPage';
 
 export default function App() {
     return (
@@ -26,6 +28,8 @@ export default function App() {
                         </Route>
                         <Route element={<ProtectedRoute requiredRole="admin" />}>
                             <Route path="admin" element={<AdminPage />} />
+                            <Route path="admin/create" element={<AdminCreateVideoPage />} />
+                            <Route path="admin/edit/:id" element={<AdminEditVideoPage />} />
                         </Route>
                     </Route>
                 </Routes>

@@ -51,5 +51,30 @@ class VideoController {
         }
     }
 
+    public function updateVideo(string $id, array $data): bool {
+        try {
+            $stmt = $this->pdo->prepare("
+                UPDATE videos
+                SET title = :title,
+                    description = :description,
+                    channel_name = :channel_name,
+                    thumbnail_url = :thumbnail_url,
+                    category = :category
+                WHERE id = :id
+            ");
+
+            return $stmt->execute([
+                'id' => $id,
+                'title' => $data['title'],
+                'description' => $data['description'] ?? '',
+                'channel_name' => $data['channel_name'],
+                'thumbnail_url' => $data['thumbnail_url'] ?? '',
+                'category' => $data['category'] ?? 'General'
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
 
 }

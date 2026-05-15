@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS"); // Додано DELETE
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
 // Обробка Preflight-запиту від браузера
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -83,6 +84,19 @@ if ($method === 'GET' && $uri === '/') {
     } else {
         http_response_code(400);
         echo json_encode(["error" => "Failed to delete video"]);
+    }
+
+} elseif ($method === 'PUT' && preg_match('/^\/videos\/([^\/]+)$/', $uri, $matches)) {
+    // Оновлення відео
+    $videoId = $matches[1];
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if ($videoController->updateVideo($videoId, $data)) {
+        http_response_code(200);
+        echo json_encode(["status" => "updated"]);
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Failed to update video"]);
     }
 
 } else {

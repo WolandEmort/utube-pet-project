@@ -82,6 +82,22 @@ export const uiLabels = {
         confirmDelete: 'Ви впевнені, що хочете видалити це відео?',
         emptyText: 'Відео поки що немає',
         errorDelete: 'Помилка при видаленні',
+        addVideoBtn: 'Додати відео',
+        createTitle: 'Додавання нового відео',
+        formIdLabel: 'ID відео (частина URL з YouTube)',
+        formIdPlaceholder: 'Наприклад: dQw4w9WgXcQ',
+        formTitleLabel: 'Назва відео',
+        formDescLabel: 'Опис',
+        formChannelLabel: 'Назва каналу',
+        formThumbLabel: 'URL прев\'ю (зображення)',
+        formCategoryLabel: 'Категорія',
+        submitBtn: 'Зберегти',
+        cancelBtn: 'Скасувати',
+        errorCreate: 'Помилка при створенні відео',
+        editBtn: 'Редагувати',
+        editTitle: 'Редагування відео',
+        updateBtn: 'Оновити',
+        errorUpdate: 'Помилка при оновленні відео',
     }
 
 } as const;
