@@ -1,40 +1,41 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // 1. Додано імпорт
+import { Link } from 'react-router-dom';
 import { uiLabels } from '../constants/labels';
 import { type Video } from '../components/VideoCard';
+import { useApi } from '../hooks/useApi'; // Імпортуємо наш хук
 
 export default function AdminPage() {
     const [videos, setVideos] = useState<Video[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { admin, videoPage } = uiLabels;
-
-    const fetchVideos = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/');
-            const data = await response.json();
-            setVideos(data);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const { request } = useApi(); // Ініціалізуємо хук
 
     useEffect(() => {
+        const fetchVideos = async () => {
+            try {
+                // Використовуємо request, базовий URL підставиться автоматично
+                const data = await request('/');
+                setVideos(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         void fetchVideos();
-    }, []);
+    }, [request]); // Додаємо request у залежності
 
     const handleDelete = async (id: string) => {
         if (!window.confirm(admin.confirmDelete)) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/videos/${id}`, {
+            // Використовуємо request. Токен підставиться автоматично.
+            await request(`/videos/${id}`, {
                 method: 'DELETE',
             });
 
-            if (response.ok) {
-                setVideos(prev => prev.filter(v => v.id !== id));
-            }
+            setVideos(prev => prev.filter(v => v.id !== id));
         } catch (err) {
             console.error('Помилка DELETE запиту:', err);
             alert(admin.errorDelete);
@@ -45,7 +46,6 @@ export default function AdminPage() {
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
-            {/* 2. Flex-контейнер для заголовка та кнопки */}
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-white">{admin.title}</h1>
                 <Link

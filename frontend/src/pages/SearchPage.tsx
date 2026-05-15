@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import VideoCard, { type Video } from '../components/VideoCard';
 import { uiLabels } from '../constants/labels';
+import { useApi } from '../hooks/useApi'; // 1. Імпорт хука
 
 const MAX_QUERY_LENGTH = 100;
 
 export default function SearchPage() {
     const [searchParams] = useSearchParams();
     const { search } = uiLabels;
+    const { request } = useApi(); // 2. Ініціалізація хука
 
-    // Змінили назву стану з allVideos на results, оскільки тепер тут лише результати
     const [results, setResults] = useState<Video[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -18,7 +19,6 @@ export default function SearchPage() {
     const query = rawQuery.slice(0, MAX_QUERY_LENGTH);
 
     useEffect(() => {
-        // Якщо запит порожній, не робимо зайвий виклик до БД
         if (!query.trim()) {
             setResults([]);
             return;
@@ -28,15 +28,9 @@ export default function SearchPage() {
             setIsLoading(true);
             setError(null);
             try {
-                // Додаємо параметр пошуку до URL. encodeURIComponent захищає від спецсимволів в URL
-                const url = `http://localhost:8080/?q=${encodeURIComponent(query.trim())}`;
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP помилка: статускод ${response.status}`);
-                }
-
-                const data = await response.json();
+                // 3. Формуємо endpoint з параметром і викликаємо request
+                const endpoint = `/?q=${encodeURIComponent(query.trim())}`;
+                const data = await request(endpoint);
                 setResults(data);
             } catch (err) {
                 if (err instanceof Error) {
@@ -49,8 +43,8 @@ export default function SearchPage() {
             }
         };
 
-        fetchSearchResults();
-    }, [query]); // Залежність від query: запит відправиться заново, якщо зміниться текст пошуку
+        void fetchSearchResults();
+    }, [query, request]);
 
     if (isLoading) {
         return (

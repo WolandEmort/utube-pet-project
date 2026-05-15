@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { uiLabels } from '../constants/labels';
+import { useApi } from '../hooks/useApi'; // 1. Імпорт хука
 
 export default function AdminCreateVideoPage() {
     const navigate = useNavigate();
     const { admin } = uiLabels;
+    const { request } = useApi(); // 2. Ініціалізація хука
 
-    // Стан для форми. Поля відповідають очікуванням бекенду (VideoController)
     const [formData, setFormData] = useState({
         id: '',
         title: '',
@@ -19,7 +20,7 @@ export default function AdminCreateVideoPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -27,25 +28,18 @@ export default function AdminCreateVideoPage() {
         }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8080/', {
+            // 3. Використання request. Content-Type та Authorization підставляться автоматично
+            await request('/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
                 body: JSON.stringify(formData)
             });
 
-            if (!response.ok) {
-                throw new Error(admin.errorCreate);
-            }
-
-            // У разі успіху повертаємось на головну сторінку адмінки
             navigate('/admin');
         } catch (err) {
             console.error(err);
@@ -70,17 +64,11 @@ export default function AdminCreateVideoPage() {
             )}
 
             <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col gap-5">
-
                 <div className="flex flex-col gap-1">
                     <label htmlFor="id" className="text-sm font-medium text-gray-300">{admin.formIdLabel}</label>
                     <input
-                        type="text"
-                        id="id"
-                        name="id"
-                        required
-                        placeholder={admin.formIdPlaceholder}
-                        value={formData.id}
-                        onChange={handleChange}
+                        type="text" id="id" name="id" required placeholder={admin.formIdPlaceholder}
+                        value={formData.id} onChange={handleChange}
                         className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
                     />
                 </div>
@@ -88,12 +76,7 @@ export default function AdminCreateVideoPage() {
                 <div className="flex flex-col gap-1">
                     <label htmlFor="title" className="text-sm font-medium text-gray-300">{admin.formTitleLabel}</label>
                     <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        required
-                        value={formData.title}
-                        onChange={handleChange}
+                        type="text" id="title" name="title" required value={formData.title} onChange={handleChange}
                         className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
                     />
                 </div>
@@ -101,12 +84,7 @@ export default function AdminCreateVideoPage() {
                 <div className="flex flex-col gap-1">
                     <label htmlFor="channel_name" className="text-sm font-medium text-gray-300">{admin.formChannelLabel}</label>
                     <input
-                        type="text"
-                        id="channel_name"
-                        name="channel_name"
-                        required
-                        value={formData.channel_name}
-                        onChange={handleChange}
+                        type="text" id="channel_name" name="channel_name" required value={formData.channel_name} onChange={handleChange}
                         className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
                     />
                 </div>
@@ -114,12 +92,7 @@ export default function AdminCreateVideoPage() {
                 <div className="flex flex-col gap-1">
                     <label htmlFor="thumbnail_url" className="text-sm font-medium text-gray-300">{admin.formThumbLabel}</label>
                     <input
-                        type="url"
-                        id="thumbnail_url"
-                        name="thumbnail_url"
-                        required
-                        value={formData.thumbnail_url}
-                        onChange={handleChange}
+                        type="url" id="thumbnail_url" name="thumbnail_url" required value={formData.thumbnail_url} onChange={handleChange}
                         className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
                     />
                 </div>
@@ -127,12 +100,7 @@ export default function AdminCreateVideoPage() {
                 <div className="flex flex-col gap-1">
                     <label htmlFor="category" className="text-sm font-medium text-gray-300">{admin.formCategoryLabel}</label>
                     <input
-                        type="text"
-                        id="category"
-                        name="category"
-                        required
-                        value={formData.category}
-                        onChange={handleChange}
+                        type="text" id="category" name="category" required value={formData.category} onChange={handleChange}
                         className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
                     />
                 </div>
@@ -140,33 +108,25 @@ export default function AdminCreateVideoPage() {
                 <div className="flex flex-col gap-1">
                     <label htmlFor="description" className="text-sm font-medium text-gray-300">{admin.formDescLabel}</label>
                     <textarea
-                        id="description"
-                        name="description"
-                        rows={4}
-                        required
-                        value={formData.description}
-                        onChange={handleChange}
+                        id="description" name="description" rows={4} required value={formData.description} onChange={handleChange}
                         className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors resize-none"
                     />
                 </div>
 
                 <div className="flex justify-end gap-3 mt-4">
                     <button
-                        type="button"
-                        onClick={() => navigate('/admin')}
+                        type="button" onClick={() => navigate('/admin')}
                         className="px-5 py-2 rounded-lg text-white font-medium hover:bg-gray-800 transition-colors"
                     >
                         {admin.cancelBtn}
                     </button>
                     <button
-                        type="submit"
-                        disabled={isLoading}
+                        type="submit" disabled={isLoading}
                         className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-5 py-2 rounded-lg font-medium transition-colors"
                     >
                         {isLoading ? '...' : admin.submitBtn}
                     </button>
                 </div>
-
             </form>
         </div>
     );

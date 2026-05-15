@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import VideoCard, { type Video } from '../components/VideoCard';
 import { useAuth } from '../context/AuthContext';
 import { uiLabels } from '../constants/labels';
+import { useApi } from '../hooks/useApi';
 
 export default function HistoryPage() {
     const { user } = useAuth();
+    const { request } = useApi();
     const [videos, setVideos] = useState<Video[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
@@ -12,20 +14,17 @@ export default function HistoryPage() {
     const { history: labels } = uiLabels;
 
     useEffect(() => {
-        if (!user?.id) {
+        // Залишаємо базову перевірку, щоб не робити зайвий запит, якщо юзера немає
+        if (!user) {
             setIsLoading(false);
             return;
         }
 
         const fetchHistory = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/history?user_id=${user.id}`);
-
-                if (!response.ok) {
-                    throw new Error(labels.errorLoad);
-                }
-
-                const data = await response.json();
+                // Використовуємо хук useApi.
+                // Параметр ?user_id= більше не потрібен, оскільки бекенд бере ID з токена
+                const data = await request('/history');
                 setVideos(data);
             } catch (err) {
                 if (err instanceof Error) {
@@ -38,8 +37,8 @@ export default function HistoryPage() {
             }
         };
 
-        fetchHistory();
-    }, [user?.id, labels.errorLoad, labels.errorUnknown]);
+        void fetchHistory();
+    }, [user, request, labels.errorUnknown]);
 
     if (isLoading) {
         return <div className="text-white p-6 text-center">{labels.loading}</div>;

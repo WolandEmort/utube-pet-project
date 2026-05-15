@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { uiLabels } from '../constants/labels';
 import { type Video } from '../components/VideoCard';
+import { useApi } from '../hooks/useApi'; // Імпортуємо наш хук
 
 export default function VideoPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { request } = useApi(); // Ініціалізуємо хук
 
     const { videoPage, auth, videoCard } = uiLabels;
 
@@ -18,20 +20,12 @@ export default function VideoPage() {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const response = await fetch('http://localhost:8080/');
-
-                if (!response.ok) {
-                    // Встановлюємо помилку без throw, щоб уникнути локального перехоплення
-                    setError(`${videoPage.errorPrefix} статускод ${response.status}`);
-                    return; // Перериваємо виконання функції
-                }
-
-                const data = await response.json();
+                // Використовуємо хук
+                const data = await request('/');
                 setAllVideos(data);
             } catch (err) {
-                // Цей блок тепер ловитиме лише мережеві помилки (наприклад, сервер недоступний)
                 if (err instanceof Error) {
-                    setError(err.message);
+                    setError(`${videoPage.errorPrefix} ${err.message}`);
                 } else {
                     setError(videoPage.errorUnknown);
                 }
@@ -40,9 +34,8 @@ export default function VideoPage() {
             }
         };
 
-        // Явно вказуємо компілятору, що проміс ігнорується навмисно
         void fetchVideos();
-    }, [videoPage.errorPrefix, videoPage.errorUnknown]);
+    }, [request, videoPage.errorPrefix, videoPage.errorUnknown]);
 
     useEffect(() => {
         if (!user) {
@@ -57,24 +50,19 @@ export default function VideoPage() {
 
         const recordHistory = async () => {
             try {
-                await fetch('http://localhost:8080/history', {
+                // Використовуємо хук.
+                // Не передаємо user_id, бекенд його бере з JWT токена
+                await request('/history', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        user_id: user.id,
-                        video_id: id
-                    })
+                    body: JSON.stringify({ video_id: id })
                 });
             } catch (error) {
                 console.error('Помилка виконання POST /history:', error);
             }
         };
 
-        // Явно вказуємо компілятору, що проміс ігнорується навмисно
         void recordHistory();
-    }, [id, user?.id]);
+    }, [id, user?.id, request]);
 
     if (!user) return null;
 
@@ -122,7 +110,6 @@ export default function VideoPage() {
                         title={video.title}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
-                        // Додано border-0 замість frameBorder="0"
                         className="w-full h-full border-0"
                     ></iframe>
                 </div>

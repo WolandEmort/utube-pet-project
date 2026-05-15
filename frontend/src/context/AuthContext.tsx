@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 
-// Додано поле role для підтримки прав доступу в системі
 export interface User {
     id: string;
     name: string;
@@ -11,6 +10,7 @@ export interface User {
 
 interface AuthContextType {
     user: User | null;
+    token: string | null; // Додано поле для токена
     login: (email: string, password: string) => Promise<void>;
     register: (name: string, email: string, password: string) => Promise<void>;
     logout: () => void;
@@ -18,12 +18,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_URL = 'http://localhost:8080';
+// Використовуємо змінну оточення Vite. Fallback на localhost залишаємо для підстраховки.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(() => {
         const savedUser = localStorage.getItem('currentUser');
         return savedUser ? JSON.parse(savedUser) : null;
+    });
+
+    // Новий стейт для JWT токена
+    const [token, setToken] = useState<string | null>(() => {
+        return localStorage.getItem('token');
     });
 
     const login = async (email: string, password: string) => {
@@ -39,9 +45,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             throw new Error(data.error || 'Помилка авторизації');
         }
 
-        // Тепер об'єкт data.user містить поле role, отримане з БД через UserController
+        // Зберігаємо юзера та токен
         localStorage.setItem('currentUser', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
+
         setUser(data.user);
+        setToken(data.token);
     };
 
     const register = async (name: string, email: string, password: string) => {
@@ -61,18 +70,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const logout = () => {
+        // Очищаємо дані при виході
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
         setUser(null);
+        setToken(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout }}>
+        <AuthContext.Provider value={{ user, token, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     );
 }
 
-// Hook
 // eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
     const context = useContext(AuthContext);

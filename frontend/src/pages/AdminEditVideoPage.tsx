@@ -2,11 +2,14 @@ import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { uiLabels } from '../constants/labels';
 import { type Video } from '../components/VideoCard';
+import { useApi } from '../hooks/useApi'; // 1. Імпорт хука
 
 export default function AdminEditVideoPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { admin, videoPage } = uiLabels;
+    const { request } = useApi(); // 2. Ініціалізація хука
+
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -24,8 +27,8 @@ export default function AdminEditVideoPage() {
 
         const fetchVideoData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/');
-                const videos: Video[] = await response.json();
+                // 3. Отримання даних через request
+                const videos: Video[] = await request('/');
                 const video = videos.find(v => v.id === id);
 
                 if (video) {
@@ -39,7 +42,6 @@ export default function AdminEditVideoPage() {
                 } else {
                     setError('Відео не знайдено');
                 }
-                // 2. Видалено невикористану змінну err
             } catch {
                 setError('Помилка завантаження даних');
             } finally {
@@ -48,33 +50,24 @@ export default function AdminEditVideoPage() {
         };
 
         void fetchVideoData();
-    }, [id]);
+    }, [id, request]);
 
-    // 1. Використання імпортованих типів
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // 1. Використання імпортованих типів
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
         setError(null);
 
         try {
-            const response = await fetch(`http://localhost:8080/videos/${id}`, {
+            // 4. Оновлення даних через request
+            await request(`/videos/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
-
-            // 3. Замість throw перериваємо виконання через return
-            if (!response.ok) {
-                setError(admin.errorUpdate);
-                setIsSubmitting(false);
-                return;
-            }
 
             navigate('/admin');
         } catch (err) {

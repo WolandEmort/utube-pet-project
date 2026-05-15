@@ -1,33 +1,27 @@
 import { useState, useEffect } from 'react';
 import VideoCard, { type Video } from '../components/VideoCard';
 import { uiLabels } from '../constants/labels';
+import { useApi } from '../hooks/useApi'; // 1. Імпорт хука
 
 const ALL_CATEGORY_ID = 'all';
 
 export default function HomePage() {
     const { home } = uiLabels;
+    const { request } = useApi(); // 2. Ініціалізація хука
 
-    // 1. Додаємо стани для зберігання даних з сервера, статусу завантаження та помилок
     const [videos, setVideos] = useState<Video[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const [activeCategory, setActiveCategory] = useState<string>(ALL_CATEGORY_ID);
 
-    // 2. Хук useEffect для виконання GET-запиту при монтуванні компонента
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const response = await fetch('http://localhost:8080/');
-
-                if (!response.ok) {
-                    throw new Error(`HTTP помилка: статускод ${response.status}`);
-                }
-
-                const data = await response.json();
+                // 3. Використання request замість fetch
+                const data = await request('/');
                 setVideos(data);
             } catch (err) {
-                // Перевіряємо тип помилки перед присвоєнням
                 if (err instanceof Error) {
                     setError(err.message);
                 } else {
@@ -38,18 +32,15 @@ export default function HomePage() {
             }
         };
 
-        fetchVideos();
-    }, []);
+        void fetchVideos();
+    }, [request]);
 
-    // 3. Динамічне формування категорій на основі даних з бекенду
     const categories = [ALL_CATEGORY_ID, ...new Set(videos.map((video) => video.category))];
 
-    // 4. Фільтрація отриманого масиву
     const filteredVideos = activeCategory === ALL_CATEGORY_ID
         ? videos
         : videos.filter((video) => video.category === activeCategory);
 
-    // 5. Рендеринг стану завантаження
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full text-gray-400">
@@ -58,7 +49,6 @@ export default function HomePage() {
         );
     }
 
-    // 6. Рендеринг стану помилки мережі або сервера
     if (error) {
         return (
             <div className="flex items-center justify-center h-full text-red-500">
