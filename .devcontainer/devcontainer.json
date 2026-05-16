@@ -3,7 +3,7 @@
   "dockerComposeFile": "../docker-compose.yml",
   "service": "frontend",
   "runServices": ["db", "backend", "frontend"],
-  "workspaceFolder": "/app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "forwardPorts": [5173, 8080, 5432],
   "portsAttributes": {
     "8080": {
