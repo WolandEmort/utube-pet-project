@@ -1,0 +1,27 @@
+{
+  "name": "YouTube Clone Environment",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "frontend",
+  "runServices": ["db", "backend", "frontend"],
+  "workspaceFolder": "/app",
+  "forwardPorts": [5173, 8080, 5432],
+  "portsAttributes": {
+    "8080": {
+      "label": "API",
+      "onAutoForward": "notify"
+    },
+    "5173": {
+      "label": "Frontend",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  }
+}
