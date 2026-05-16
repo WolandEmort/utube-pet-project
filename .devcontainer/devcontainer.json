@@ -1,9 +1,10 @@
 {
-  "name": "YouTube Clone Environment",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "frontend",
-  "runServices": ["db", "backend", "frontend"],
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "name": "YouTube Clone Workspace",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": "docker compose up -d",
   "forwardPorts": [5173, 8080, 5432],
   "portsAttributes": {
     "8080": {
