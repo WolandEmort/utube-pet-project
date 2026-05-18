@@ -2,7 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict 2ihegm0zPOp4ZfxjPNEzqdULETkZcV5qFEhYh1RSrVmgqxAOkFNJqTUNLFJ29TL
 
 -- Dumped from database version 18.1
 -- Dumped by pg_dump version 18.1
@@ -233,5 +232,5 @@ ALTER TABLE ONLY public.view_history
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 2ihegm0zPOp4ZfxjPNEzqdULETkZcV5qFEhYh1RSrVmgqxAOkFNJqTUNLFJ29TL
+ц
 

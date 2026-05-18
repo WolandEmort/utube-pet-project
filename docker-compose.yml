@@ -1,12 +1,11 @@
 version: '3.8'
 services:
   db:
-    image: postgres:18-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12222222q
       POSTGRES_DB: youtube_clone
-      PGDATA: /var/lib/postgresql/data
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
