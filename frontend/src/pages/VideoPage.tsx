@@ -111,6 +111,7 @@ export default function VideoPage() {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
                         className="w-full h-full border-0"
+                        referrerPolicy="strict-origin-when-cross-origin"
                     ></iframe>
                 </div>
 
