@@ -1,18 +1,18 @@
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 // eslint-disable-next-line
 interface FetchOptions extends RequestInit {
-    // Тут можна додавати кастомні параметри для налаштування запитів у майбутньому
 }
 
 export function useApi() {
     const { token, logout } = useAuth();
     const navigate = useNavigate();
 
-    const request = async (endpoint: string, options: FetchOptions = {}) => {
+    const request = useCallback(async (endpoint: string, options: FetchOptions = {}) => {
         const headers = new Headers(options.headers || {});
 
         if (token) {
@@ -32,7 +32,6 @@ export function useApi() {
         if (response.status === 401) {
             logout();
             navigate('/login');
-            // Кидаємо помилку, щоб зупинити подальше виконання try-блоку в компоненті
             throw new Error('Сесія закінчилась. Будь ласка, авторизуйтесь знову.');
         }
 
@@ -48,7 +47,7 @@ export function useApi() {
         }
 
         return data;
-    };
+    }, [token, logout, navigate]); // Залежності, які використовуються всередині useCallback
 
     return { request };
 }

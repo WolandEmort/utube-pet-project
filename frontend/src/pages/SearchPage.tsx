@@ -2,25 +2,27 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import VideoCard, { type Video } from '../components/VideoCard';
 import { uiLabels } from '../constants/labels';
-import { useApi } from '../hooks/useApi'; // 1. Імпорт хука
+import { useApi } from '../hooks/useApi';
 
 const MAX_QUERY_LENGTH = 100;
 
 export default function SearchPage() {
     const [searchParams] = useSearchParams();
     const { search } = uiLabels;
-    const { request } = useApi(); // 2. Ініціалізація хука
-
-    const [results, setResults] = useState<Video[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const { request } = useApi();
 
     const rawQuery = searchParams.get('q') || '';
     const query = rawQuery.slice(0, MAX_QUERY_LENGTH);
 
+    const [results, setResults] = useState<Video[]>([]);
+    // 1. Ініціалізуємо isLoading залежно від наявності запиту в URL
+    const [isLoading, setIsLoading] = useState<boolean>(() => !!query.trim());
+    const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         if (!query.trim()) {
             setResults([]);
+            setIsLoading(false);
             return;
         }
 
@@ -28,16 +30,11 @@ export default function SearchPage() {
             setIsLoading(true);
             setError(null);
             try {
-                // 3. Формуємо endpoint з параметром і викликаємо request
                 const endpoint = `/?q=${encodeURIComponent(query.trim())}`;
                 const data = await request(endpoint);
                 setResults(data);
             } catch (err) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError('Невідома помилка при отриманні даних');
-                }
+                setError(err instanceof Error ? err.message : 'Невідома помилка при отриманні даних');
             } finally {
                 setIsLoading(false);
             }
@@ -46,21 +43,8 @@ export default function SearchPage() {
         void fetchSearchResults();
     }, [query, request]);
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-[50vh] text-gray-400">
-                Пошук відео...
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex items-center justify-center h-[50vh] text-red-500">
-                Помилка підключення до API: {error}
-            </div>
-        );
-    }
+    // 2. Видалено ранні return для isLoading та error.
+    // Макет сторінки залишається стабільним.
 
     return (
         <div className="w-full max-w-[1100px] mx-auto p-4 lg:p-6">
@@ -74,8 +58,17 @@ export default function SearchPage() {
                 )}
             </h2>
 
+            {/* 3. Умовний рендеринг відбувається виключно в контейнері списку */}
             <div className="flex flex-col gap-4">
-                {results.length > 0 ? (
+                {isLoading ? (
+                    <div className="text-gray-400 text-lg mt-10">
+                        Пошук відео...
+                    </div>
+                ) : error ? (
+                    <div className="text-red-500 text-lg mt-10">
+                        Помилка підключення до API: {error}
+                    </div>
+                ) : results.length > 0 ? (
                     results.map((video) => (
                         <VideoCard
                             key={video.id}
