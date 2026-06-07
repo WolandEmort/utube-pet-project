@@ -1,8 +1,0 @@
-### Авторизація користувача
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "email": "test@test.com",
-  "password": "securepassword123"
-}
